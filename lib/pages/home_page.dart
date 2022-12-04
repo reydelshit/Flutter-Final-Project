@@ -5,7 +5,7 @@ import 'package:finalproject/pages/logbook_page.dart';
 
 // ignore: must_be_immutable
 class Home extends StatelessWidget {
-  var firstName = TextEditingController();
+  var fullname = TextEditingController();
   var purpose = TextEditingController();
   var timeIn = TextEditingController();
   var timeOut = TextEditingController();
@@ -21,13 +21,13 @@ class Home extends StatelessWidget {
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               const CircleAvatar(
                 backgroundImage: AssetImage(
-                  "/assets/images/logo.png",
+                  "assets/images/logo.png",
                 ),
                 radius: 80.0,
                 backgroundColor: Colors.transparent,
               ),
               TextField(
-                  controller: firstName,
+                  controller: fullname,
                   decoration: const InputDecoration(
                     labelText: "Full Name",
                     hintStyle:
@@ -71,11 +71,11 @@ class Home extends StatelessWidget {
                               foregroundColor: const Color(0xffcd9d63),
                             ),
                             onPressed: () {
-                              if (firstName.text == '') {
+                              if (fullname.text == '') {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                         content:
-                                            const Text('Firstname is empty!'),
+                                            const Text('Fullname is empty!'),
                                         backgroundColor: Colors.red,
                                         duration: const Duration(seconds: 2),
                                         action: SnackBarAction(

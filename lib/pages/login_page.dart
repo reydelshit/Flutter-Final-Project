@@ -38,7 +38,7 @@ class LoginPage extends StatelessWidget {
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               const CircleAvatar(
-                backgroundImage: AssetImage("/assets/images/logo.png"),
+                backgroundImage: AssetImage("assets/images/logo.png"),
                 radius: 80.0,
                 backgroundColor: Colors.transparent,
               ),
