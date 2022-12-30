@@ -1,6 +1,7 @@
 class AppConstants {
   // Routes
   static const loginPageRoute = "/";
-  static const signUpPageRoute = "/logBookPage";
-  static const homePageRoute = "/homePage";
+  static const logBookPageRoute = "/logBookPage";
+  static const viewLogPageRoute = "/viewLogPage";
+  static const mainPageRoute = "/mainPage";
 }

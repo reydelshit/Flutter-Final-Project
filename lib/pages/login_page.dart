@@ -1,5 +1,7 @@
+import 'package:finalproject/pages/main_page.dart';
 import 'package:flutter/material.dart';
-import 'package:finalproject/pages/home_page.dart';
+// import 'package:finalproject/pages/home_page.dart';
+import 'package:finalproject/pages/main_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,6 +34,22 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void showError(String message) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(message),
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 2),
+          action: SnackBarAction(label: 'OK', onPressed: () {})));
+    }
+
+    void successMessage(String message) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(message),
+          backgroundColor: Colors.green,
+          duration: const Duration(seconds: 2),
+          action: SnackBarAction(label: 'OK', onPressed: () {})));
+    }
+
     return Scaffold(
         body: Padding(
             padding: const EdgeInsets.all(20),
@@ -119,31 +137,14 @@ class LoginPage extends StatelessWidget {
                           child: const Text('Login'),
                           onPressed: () {
                             if (usernameController.text == '') {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: const Text('Username is empty!'),
-                                      backgroundColor: Colors.red,
-                                      duration: const Duration(seconds: 2),
-                                      action: SnackBarAction(
-                                          label: 'OK', onPressed: () {})));
+                              showError('Username is required!');
                             } else if (passwordController.text == '') {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: const Text('Password is empty!'),
-                                      backgroundColor: Colors.red,
-                                      duration: const Duration(seconds: 2),
-                                      action: SnackBarAction(
-                                          label: 'OK', onPressed: () {})));
+                              showError('Password is required!');
                             } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: const Text('Loggin Succesfully'),
-                                      backgroundColor: Colors.green,
-                                      duration: const Duration(seconds: 2),
-                                      action: SnackBarAction(
-                                          label: 'OK', onPressed: () {})));
+                              successMessage('Login Success');
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (BuildContext context) => Home()));
+                                  builder: (BuildContext context) =>
+                                      MainPage()));
                             }
                           }))),
             ])));

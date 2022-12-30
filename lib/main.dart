@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:finalproject/pages/login_page.dart';
 import 'package:finalproject/constant/app_constant.dart';
-import 'package:finalproject/pages/home_page.dart';
 import 'package:finalproject/pages/logbook_page.dart';
+import 'package:finalproject/pages/viewlog_page.dart';
+import 'package:finalproject/pages/main_page.dart';
 
 void main() {
   runApp((MaterialApp(
@@ -14,8 +15,9 @@ void main() {
     ),
     routes: {
       AppConstants.loginPageRoute: (context) => LoginPage(),
-      AppConstants.signUpPageRoute: (context) => const LogBook(),
-      AppConstants.homePageRoute: (context) => Home(),
+      AppConstants.logBookPageRoute: (context) => LogBook(),
+      AppConstants.viewLogPageRoute: (context) => ViewLogBook(),
+      AppConstants.mainPageRoute: (context) => MainPage(),
     },
   )));
 }
