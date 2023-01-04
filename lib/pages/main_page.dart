@@ -11,6 +11,13 @@ class MainPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            const Center(
+              child: CircleAvatar(
+                backgroundImage: AssetImage("assets/images/logo.png"),
+                radius: 80.0,
+                backgroundColor: Colors.transparent,
+              ),
+            ),
             SizedBox(
                 width: 120,
                 height: 70,

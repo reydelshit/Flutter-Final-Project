@@ -12,6 +12,7 @@ class LogBook extends StatefulWidget {
 class _LogBookState extends State<LogBook> {
   var fullname = TextEditingController();
   var purpose = TextEditingController();
+  var contact = TextEditingController();
 
   var timeIn = TextEditingController();
   TextEditingController timeOut = TextEditingController();
@@ -60,6 +61,14 @@ class _LogBookState extends State<LogBook> {
                   controller: purpose,
                   decoration: const InputDecoration(
                     labelText: "Purpose",
+                    hintStyle:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    labelStyle: TextStyle(fontSize: 13, color: Colors.white),
+                  )),
+              TextField(
+                  controller: contact,
+                  decoration: const InputDecoration(
+                    labelText: "Contact Number",
                     hintStyle:
                         TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     labelStyle: TextStyle(fontSize: 13, color: Colors.white),
