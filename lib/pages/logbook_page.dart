@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:finalproject/constant/app_constant.dart';
 
+import 'package:finalproject/database/database_helper.dart';
+
 class LogBook extends StatefulWidget {
   LogBook({super.key});
 
@@ -14,10 +16,15 @@ class _LogBookState extends State<LogBook> {
   var purpose = TextEditingController();
   var contact = TextEditingController();
 
+  var timeOut = TextEditingController();
   var timeIn = TextEditingController();
-  TextEditingController timeOut = TextEditingController();
+  // TextEditingController timeOut = TextEditingController();
   TimeOfDay _timeIn = TimeOfDay.now();
   // TimeOfDay _timeOut = TimeOfDay.now();
+
+  // TimeOfDay _timeOut = TimeOfDay.now();
+
+  // var logBookID;
 
   @override
   Widget build(BuildContext context) {
@@ -127,6 +134,60 @@ class _LogBookState extends State<LogBook> {
                   child: const Text('Time In'),
                 ),
               ),
+              // const SizedBox(height: 20),
+              // SizedBox(
+              //   width: 120,
+              //   height: 40,
+              //   child: ElevatedButton(
+              //     onPressed: () {
+              //       showCupertinoModalPopup(
+              //         context: context,
+              //         builder: (context) {
+              //           return CupertinoActionSheet(
+              //             title: const Text('Time Out'),
+              //             message:
+              //                 const Text('Please select a time for time out'),
+              //             actions: <Widget>[
+              //               CupertinoActionSheetAction(
+              //                 onPressed: () {
+              //                   var time = DateTime.now();
+              //                   setState(() {
+              //                     _timeIn = TimeOfDay.fromDateTime(time);
+              //                     timeOut.text = _timeIn.format(context);
+              //                   });
+              //                   Navigator.pop(context);
+              //                 },
+              //                 child: Container(
+              //                   height: 100,
+              //                   child: CupertinoDatePicker(
+              //                     mode: CupertinoDatePickerMode.time,
+              //                     onDateTimeChanged: (time) {
+              //                       setState(() {
+              //                         _timeIn = TimeOfDay.fromDateTime(time);
+              //                         timeOut.text = _timeIn.format(context);
+              //                       });
+              //                     },
+              //                   ),
+              //                 ),
+              //               ),
+              //             ],
+              //             cancelButton: CupertinoActionSheetAction(
+              //               child: const Text('Cancel'),
+              //               onPressed: () {
+              //                 Navigator.pop(context);
+              //               },
+              //             ),
+              //           );
+              //         },
+              //       );
+              //     },
+              //     style: ElevatedButton.styleFrom(
+              //       backgroundColor: Colors.white,
+              //       foregroundColor: const Color(0xffcd9d63),
+              //     ),
+              //     child: const Text('Time Out'),
+              //   ),
+              // ),
               const SizedBox(height: 60),
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 SizedBox(
@@ -140,7 +201,7 @@ class _LogBookState extends State<LogBook> {
                               backgroundColor: Colors.white,
                               foregroundColor: const Color(0xffcd9d63),
                             ),
-                            onPressed: () {
+                            onPressed: () async {
                               if (fullname.text == '') {
                                 showError('Fullname is Empty');
                               } else if (purpose.text == '') {
@@ -148,11 +209,27 @@ class _LogBookState extends State<LogBook> {
                               } else if (timeIn.text == '') {
                                 showError('Time In is Empty');
                               } else {
-                                successMessage(
-                                    'Succesfully Created Added Your Details');
+                                var result = await DatabaseHelper.insertLogBook(
+                                    fullname.text,
+                                    purpose.text,
+                                    contact.text,
+                                    timeIn.text,
+                                    timeOut.text);
 
-                                Navigator.pushNamed(
-                                    context, AppConstants.viewLogPageRoute);
+                                if (result > 0) {
+                                  //Success Message
+                                  // resetControllers();
+                                  // setState(() {
+                                  //   loadAllStudents();
+                                  // });
+                                  successMessage(
+                                      'Succesfully Created Added Your Details');
+                                  Navigator.pushNamed(
+                                      context, AppConstants.viewLogPageRoute);
+                                } else {
+                                  //Error Message
+                                  showError('Error Adding LogBook - ADD MODAL');
+                                }
                               }
                             }))),
                 SizedBox(
