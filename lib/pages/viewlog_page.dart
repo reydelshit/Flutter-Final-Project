@@ -6,13 +6,14 @@ import 'package:finalproject/database/database_helper.dart';
 // import 'package:finalproject/pages/login_page.dart';
 // import 'package:finalproject/pages/logbook_page.dart';
 
-class Log {
-  String fullName;
-  String purpose;
-  String timeIn;
-  String timeOut;
-  Log(this.fullName, this.purpose, this.timeIn, this.timeOut);
-}
+// class Log {
+//   String fullName;
+//   String purpose;
+//   String contact;
+//   String timeIn;
+//   String timeOut;
+//   Log(this.fullName, this.purpose, this.contact, this.timeIn, this.timeOut);
+// }
 
 class ViewLogBook extends StatefulWidget {
   ViewLogBook({super.key});
@@ -22,30 +23,105 @@ class ViewLogBook extends StatefulWidget {
 }
 
 class _ViewLogBookState extends State<ViewLogBook> {
-  List<Log> logs = [
-    Log("Ben Dover", "TO VISIT MY BROTHER", "8:00 AM", "5:00 PM"),
-    Log("Jane Lalat", "TO DELIVER LUNCH", "8:00 AM", "5:00 PM"),
-    Log("Alex Caruso", "TO ATTEND A MEETING", "2:00 AM", "1:00 PM"),
-  ];
-
-  // List<Map<String, dynamic>> logs = [];
+  List<Map<String, dynamic>> logs = [];
 
   var timeOut = TextEditingController();
 
   TimeOfDay _timeOut = TimeOfDay.now();
 
-  // @override
-  // void initState() {
-  //   fetchLogBook();
-  //   super.initState();
-  // }
+  void showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 2),
+        action: SnackBarAction(label: 'OK', onPressed: () {})));
+  }
 
-  // fetchLogBook() async {
-  //   final data = await DatabaseHelper.retrieveLogBook();
-  //   setState(() {
-  //     logs = data!;
-  //   });
-  // }
+  void successMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.green,
+        duration: const Duration(seconds: 2),
+        action: SnackBarAction(label: 'OK', onPressed: () {})));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    retrieveLogs();
+  }
+
+  retrieveLogs() async {
+    final data = await DatabaseHelper.retrieveLogBook();
+    setState(() {
+      logs = data!;
+    });
+  }
+
+  Future<void> updateLog(int id, String fullName, String purpose,
+      String contact, String timeIn, String timeOut) async {
+    final result = await DatabaseHelper.updateLogBook(
+        id, fullName, purpose, contact, timeIn, timeOut);
+    if (result == 0) {
+      showError("Error updating log entry");
+    } else {
+      successMessage("Updated succesfully");
+    }
+  }
+
+  Future deleteWarning(String fullname, int id) async {
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return AlertDialog(
+                title: const Text('Warning'),
+                content: SingleChildScrollView(
+                  child: ListBody(
+                    children: [
+                      const Center(),
+                      const SizedBox(
+                        height: 18.0,
+                      ),
+                      Center(
+                          child: Text(
+                        'Are you sure you want to remove  $fullname?',
+                        textAlign: TextAlign.left,
+                        style: const TextStyle(fontSize: 20.0),
+                      ))
+                    ],
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    child: const Text('Cancel'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  TextButton(
+                      child: const Text('Delete'),
+                      onPressed: () async {
+                        var result = await DatabaseHelper.deleteLogBook(id);
+                        if (result == 1) {
+                          //Success Message
+                          successMessage('Logbook Deleted');
+                        } else {
+                          //Error Message
+                          showError('Error Deleting Logbook');
+                        }
+                        retrieveLogs();
+                        setState(() {});
+                        Navigator.of(context).pop();
+                      }),
+                ],
+              );
+            },
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +134,7 @@ class _ViewLogBookState extends State<ViewLogBook> {
               onPressed: () {
                 setState(() {
                   // fetchLogBook();
+                  retrieveLogs();
                 });
               },
               icon: const Icon(Icons.refresh))
@@ -67,13 +144,14 @@ class _ViewLogBookState extends State<ViewLogBook> {
           itemCount: logs.length,
           itemBuilder: (BuildContext context, int index) {
             return ListTile(
-                title: Text(logs[index].fullName),
+                title: Text(logs[index]['fullName']),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(logs[index].timeIn),
-                    Text("Time In: " + logs[index].timeIn),
-                    Text("Time Out: " + logs[index].timeOut),
+                    Text("Purpose: " + logs[index]['purpose']),
+                    Text("Contact: " + logs[index]['contact']),
+                    Text("Time In: " + logs[index]['timeIn']),
+                    Text("Time Out: " + logs[index]['timeOut']),
                   ],
                 ),
                 trailing: Wrap(
@@ -129,13 +207,67 @@ class _ViewLogBookState extends State<ViewLogBook> {
                       ),
                       child: const Text('Time Out'),
                     ),
+
+                    // HOW CAN I MAKE THOSE CONTROLLERS FROM THE OTHER FILE
+                    // TO BE USED HERE?
+                    // I TRIED TO USE THE SAME CONTROLLERS BUT IT DOESN'T WORK
+
                     IconButton(
                       icon: const Icon(Icons.edit),
-                      onPressed: () {},
+                      onPressed: () {
+                        // showModalBottomSheet(
+                        //   context: context,
+                        //   builder: (BuildContext context) {
+                        //     return Container(
+                        //       height: 200,
+                        //       child: Column(
+                        //         children: [
+                        //           TextField(
+                        //             controller: fullName,
+                        //             decoration:
+                        //                 InputDecoration(labelText: 'Full name'),
+                        //           ),
+                        //           TextField(
+                        //             controller: purpose,
+                        //             decoration:
+                        //                 InputDecoration(labelText: 'Purpose'),
+                        //           ),
+                        //           TextField(
+                        //             controller: contact,
+                        //             decoration:
+                        //                 InputDecoration(labelText: 'Contact'),
+                        //           ),
+                        //           TextField(
+                        //             controller: timeIn,
+                        //             decoration:
+                        //                 InputDecoration(labelText: 'Time in'),
+                        //           ),
+                        //           TextField(
+                        //             controller: timeOut,
+                        //             decoration:
+                        //                 InputDecoration(labelText: 'Time out'),
+                        //           ),
+                        //           ElevatedButton(
+                        //             onPressed: () {
+                        //               updateLog(id, fullName, purpose, contact,
+                        //                   timeIn, timeOut);
+                        //               Navigator.pop(context);
+                        //             },
+                        //             child: Text("Update"),
+                        //           )
+                        //         ],
+                        //       ),
+                        //     );
+                        //   },
+                        // );
+                      },
                     ),
                     IconButton(
                       icon: const Icon(Icons.delete),
-                      onPressed: () {},
+                      onPressed: () {
+                        deleteWarning(
+                            logs[index]['fullName'], logs[index]['id']);
+                      },
                     ),
                   ],
                 ));

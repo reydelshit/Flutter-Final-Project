@@ -16,7 +16,7 @@ class DatabaseHelper {
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         fullName TEXT,
         purpose TEXT,
-        contact INTEGER,
+        contact TEXT,
         timeIn TEXT,
         timeOut TEXT,
         dateCreated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -48,10 +48,10 @@ class DatabaseHelper {
 
   //Function to update student data
   static Future<int> updateLogBook(int id, String? fullName, String? purpose,
-      String? contact, String? timeIn) async {
+      String? contact, String? timeIn, String? timeOut) async {
     final db = await DatabaseHelper.createDatabase();
     final res = db.rawUpdate(
-        "UPDATE logbook SET fullname = '$fullName', purpose ='$purpose', contact ='$contact', timeIn = '$timeIn' WHERE id = $id ");
+        "UPDATE logbook SET fullname = '$fullName', purpose ='$purpose', contact ='$contact', timeIn = '$timeIn', timeOut = '$timeOut' WHERE id = $id ");
     return res;
   }
 

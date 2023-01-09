@@ -18,13 +18,9 @@ class _LogBookState extends State<LogBook> {
 
   var timeOut = TextEditingController();
   var timeIn = TextEditingController();
-  // TextEditingController timeOut = TextEditingController();
   TimeOfDay _timeIn = TimeOfDay.now();
   // TimeOfDay _timeOut = TimeOfDay.now();
-
-  // TimeOfDay _timeOut = TimeOfDay.now();
-
-  // var logBookID;
+  // TextEditingController timeOut = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +38,24 @@ class _LogBookState extends State<LogBook> {
           backgroundColor: Colors.green,
           duration: const Duration(seconds: 2),
           action: SnackBarAction(label: 'OK', onPressed: () {})));
+    }
+
+    void _saveLogBook() async {
+      // Create an instance of the DatabaseHelper class
+      // final dbHelper = DatabaseHelper();
+
+      // Insert a row into the logbook table
+      final id = await DatabaseHelper.insertLogBook(
+        fullname.text,
+        purpose.text,
+        // int.parse(contact.text),
+        contact.text,
+        timeIn.text,
+        timeOut.text,
+      );
+
+      // Display a success message
+      successMessage('Logbook saved with ID: $id');
     }
 
     return Scaffold(
@@ -134,60 +148,6 @@ class _LogBookState extends State<LogBook> {
                   child: const Text('Time In'),
                 ),
               ),
-              // const SizedBox(height: 20),
-              // SizedBox(
-              //   width: 120,
-              //   height: 40,
-              //   child: ElevatedButton(
-              //     onPressed: () {
-              //       showCupertinoModalPopup(
-              //         context: context,
-              //         builder: (context) {
-              //           return CupertinoActionSheet(
-              //             title: const Text('Time Out'),
-              //             message:
-              //                 const Text('Please select a time for time out'),
-              //             actions: <Widget>[
-              //               CupertinoActionSheetAction(
-              //                 onPressed: () {
-              //                   var time = DateTime.now();
-              //                   setState(() {
-              //                     _timeIn = TimeOfDay.fromDateTime(time);
-              //                     timeOut.text = _timeIn.format(context);
-              //                   });
-              //                   Navigator.pop(context);
-              //                 },
-              //                 child: Container(
-              //                   height: 100,
-              //                   child: CupertinoDatePicker(
-              //                     mode: CupertinoDatePickerMode.time,
-              //                     onDateTimeChanged: (time) {
-              //                       setState(() {
-              //                         _timeIn = TimeOfDay.fromDateTime(time);
-              //                         timeOut.text = _timeIn.format(context);
-              //                       });
-              //                     },
-              //                   ),
-              //                 ),
-              //               ),
-              //             ],
-              //             cancelButton: CupertinoActionSheetAction(
-              //               child: const Text('Cancel'),
-              //               onPressed: () {
-              //                 Navigator.pop(context);
-              //               },
-              //             ),
-              //           );
-              //         },
-              //       );
-              //     },
-              //     style: ElevatedButton.styleFrom(
-              //       backgroundColor: Colors.white,
-              //       foregroundColor: const Color(0xffcd9d63),
-              //     ),
-              //     child: const Text('Time Out'),
-              //   ),
-              // ),
               const SizedBox(height: 60),
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 SizedBox(
@@ -209,27 +169,9 @@ class _LogBookState extends State<LogBook> {
                               } else if (timeIn.text == '') {
                                 showError('Time In is Empty');
                               } else {
-                                var result = await DatabaseHelper.insertLogBook(
-                                    fullname.text,
-                                    purpose.text,
-                                    contact.text,
-                                    timeIn.text,
-                                    timeOut.text);
-
-                                if (result > 0) {
-                                  //Success Message
-                                  // resetControllers();
-                                  // setState(() {
-                                  //   loadAllStudents();
-                                  // });
-                                  successMessage(
-                                      'Succesfully Created Added Your Details');
-                                  Navigator.pushNamed(
-                                      context, AppConstants.viewLogPageRoute);
-                                } else {
-                                  //Error Message
-                                  showError('Error Adding LogBook - ADD MODAL');
-                                }
+                                _saveLogBook();
+                                Navigator.pushNamed(
+                                    context, AppConstants.viewLogPageRoute);
                               }
                             }))),
                 SizedBox(
