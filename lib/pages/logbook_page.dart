@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:finalproject/constant/app_constant.dart';
 
 import 'package:finalproject/database/database_helper.dart';
+import 'package:finalproject/model/controllers.dart';
 
 class LogBook extends StatefulWidget {
   LogBook({super.key});
@@ -11,14 +12,27 @@ class LogBook extends StatefulWidget {
   State<LogBook> createState() => _LogBookState();
 }
 
-class _LogBookState extends State<LogBook> {
-  var fullname = TextEditingController();
-  var purpose = TextEditingController();
-  var contact = TextEditingController();
+class ControllerDAO {
+  static final fullname = TextEditingController();
+  static final purpose = TextEditingController();
+  static final contact = TextEditingController();
+  static final timeIn = TextEditingController();
+  static final timeOut = TextEditingController();
+}
 
-  var timeOut = TextEditingController();
-  var timeIn = TextEditingController();
+class _LogBookState extends State<LogBook> {
+  // final fullname = TextEditingController();
+  // final purpose = TextEditingController();
+  // final contact = TextEditingController();
+
+  // final timeOut = TextEditingController();
+  // final timeIn = TextEditingController();
+
+  // final ControllerDAO controllerDAO = ControllerDAO();
+
   TimeOfDay _timeIn = TimeOfDay.now();
+
+//  ControllerDAO(fullName, purpose, contact, timeIn, timeOut);
   // TimeOfDay _timeOut = TimeOfDay.now();
   // TextEditingController timeOut = TextEditingController();
 
@@ -46,12 +60,12 @@ class _LogBookState extends State<LogBook> {
 
       // Insert a row into the logbook table
       final id = await DatabaseHelper.insertLogBook(
-        fullname.text,
-        purpose.text,
+        ControllerDAO.fullname.text,
+        ControllerDAO.purpose.text,
         // int.parse(contact.text),
-        contact.text,
-        timeIn.text,
-        timeOut.text,
+        ControllerDAO.contact.text,
+        ControllerDAO.timeIn.text,
+        ControllerDAO.timeOut.text,
       );
 
       // Display a success message
@@ -71,7 +85,7 @@ class _LogBookState extends State<LogBook> {
                 ),
               ),
               TextField(
-                  controller: fullname,
+                  controller: ControllerDAO.fullname,
                   decoration: const InputDecoration(
                     labelText: "Full Name",
                     hintStyle:
@@ -79,7 +93,7 @@ class _LogBookState extends State<LogBook> {
                     labelStyle: TextStyle(fontSize: 13, color: Colors.white),
                   )),
               TextField(
-                  controller: purpose,
+                  controller: ControllerDAO.purpose,
                   decoration: const InputDecoration(
                     labelText: "Purpose",
                     hintStyle:
@@ -87,7 +101,7 @@ class _LogBookState extends State<LogBook> {
                     labelStyle: TextStyle(fontSize: 13, color: Colors.white),
                   )),
               TextField(
-                  controller: contact,
+                  controller: ControllerDAO.contact,
                   decoration: const InputDecoration(
                     labelText: "Contact Number",
                     hintStyle:
@@ -113,7 +127,8 @@ class _LogBookState extends State<LogBook> {
                                 var time = DateTime.now();
                                 setState(() {
                                   _timeIn = TimeOfDay.fromDateTime(time);
-                                  timeIn.text = _timeIn.format(context);
+                                  ControllerDAO.timeIn.text =
+                                      _timeIn.format(context);
                                 });
                                 Navigator.pop(context);
                               },
@@ -124,7 +139,8 @@ class _LogBookState extends State<LogBook> {
                                   onDateTimeChanged: (time) {
                                     setState(() {
                                       _timeIn = TimeOfDay.fromDateTime(time);
-                                      timeIn.text = _timeIn.format(context);
+                                      ControllerDAO.timeIn.text =
+                                          _timeIn.format(context);
                                     });
                                   },
                                 ),
@@ -162,11 +178,11 @@ class _LogBookState extends State<LogBook> {
                               foregroundColor: const Color(0xffcd9d63),
                             ),
                             onPressed: () async {
-                              if (fullname.text == '') {
+                              if (ControllerDAO.fullname.text == '') {
                                 showError('Fullname is Empty');
-                              } else if (purpose.text == '') {
+                              } else if (ControllerDAO.purpose.text == '') {
                                 showError('Purpose is Empty');
-                              } else if (timeIn.text == '') {
+                              } else if (ControllerDAO.timeIn.text == '') {
                                 showError('Time In is Empty');
                               } else {
                                 _saveLogBook();

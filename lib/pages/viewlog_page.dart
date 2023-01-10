@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:finalproject/database/database_helper.dart';
+import 'package:finalproject/model/controllers.dart';
 
 // import 'package:finalproject/pages/login_page.dart';
 // import 'package:finalproject/pages/logbook_page.dart';
@@ -23,6 +24,13 @@ class ViewLogBook extends StatefulWidget {
 }
 
 class _ViewLogBookState extends State<ViewLogBook> {
+  String fullName = ControllerDAO.fullname.text;
+  String purpose = ControllerDAO.purpose.text;
+
+  String contact = ControllerDAO.contact.text;
+  String timeIn = ControllerDAO.timeIn.text;
+  // String timeOut = ControllerDAO.timeOut.text;
+
   List<Map<String, dynamic>> logs = [];
 
   var timeOut = TextEditingController();
@@ -143,6 +151,7 @@ class _ViewLogBookState extends State<ViewLogBook> {
       body: ListView.builder(
           itemCount: logs.length,
           itemBuilder: (BuildContext context, int index) {
+            final test = logs[index];
             return ListTile(
                 title: Text(logs[index]['fullName']),
                 subtitle: Column(
@@ -207,59 +216,150 @@ class _ViewLogBookState extends State<ViewLogBook> {
                       ),
                       child: const Text('Time Out'),
                     ),
-
-                    // HOW CAN I MAKE THOSE CONTROLLERS FROM THE OTHER FILE
-                    // TO BE USED HERE?
-                    // I TRIED TO USE THE SAME CONTROLLERS BUT IT DOESN'T WORK
-
                     IconButton(
                       icon: const Icon(Icons.edit),
                       onPressed: () {
-                        // showModalBottomSheet(
-                        //   context: context,
-                        //   builder: (BuildContext context) {
-                        //     return Container(
-                        //       height: 200,
-                        //       child: Column(
-                        //         children: [
-                        //           TextField(
-                        //             controller: fullName,
-                        //             decoration:
-                        //                 InputDecoration(labelText: 'Full name'),
-                        //           ),
-                        //           TextField(
-                        //             controller: purpose,
-                        //             decoration:
-                        //                 InputDecoration(labelText: 'Purpose'),
-                        //           ),
-                        //           TextField(
-                        //             controller: contact,
-                        //             decoration:
-                        //                 InputDecoration(labelText: 'Contact'),
-                        //           ),
-                        //           TextField(
-                        //             controller: timeIn,
-                        //             decoration:
-                        //                 InputDecoration(labelText: 'Time in'),
-                        //           ),
-                        //           TextField(
-                        //             controller: timeOut,
-                        //             decoration:
-                        //                 InputDecoration(labelText: 'Time out'),
-                        //           ),
-                        //           ElevatedButton(
-                        //             onPressed: () {
-                        //               updateLog(id, fullName, purpose, contact,
-                        //                   timeIn, timeOut);
-                        //               Navigator.pop(context);
-                        //             },
-                        //             child: Text("Update"),
-                        //           )
-                        //         ],
-                        //       ),
-                        //     );
-                        //   },
-                        // );
+                        showModalBottomSheet(
+                            shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(25.0))),
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (context) {
+                              return Container(
+                                color: Colors.black,
+                                height: MediaQuery.of(context).size.height,
+                                child: SafeArea(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 18),
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.vertical,
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          const SizedBox(
+                                            height: 16.0,
+                                          ),
+                                          TextField(
+                                            controller: ControllerDAO.fullname,
+                                            decoration: const InputDecoration(
+                                                labelText: "Full Name",
+                                                labelStyle: TextStyle(
+                                                    fontSize: 13,
+                                                    color: Colors.grey),
+                                                prefixIcon: Icon(Icons
+                                                    .person_outline_outlined)),
+                                          ),
+                                          const SizedBox(
+                                            height: 16.0,
+                                          ),
+                                          TextField(
+                                            controller: ControllerDAO.purpose,
+                                            decoration: const InputDecoration(
+                                                labelText: "Purpose",
+                                                labelStyle: TextStyle(
+                                                    fontSize: 13,
+                                                    color: Colors.grey),
+                                                prefixIcon:
+                                                    Icon(Icons.numbers)),
+                                          ),
+                                          const SizedBox(
+                                            height: 16.0,
+                                          ),
+                                          TextField(
+                                            controller: ControllerDAO.contact,
+                                            decoration: const InputDecoration(
+                                                labelText: "Contact",
+                                                labelStyle: TextStyle(
+                                                    fontSize: 13,
+                                                    color: Colors.grey),
+                                                prefixIcon: Icon(Icons.link)),
+                                          ),
+                                          TextField(
+                                            controller: ControllerDAO.timeIn,
+                                            decoration: const InputDecoration(
+                                                labelText: "Time In",
+                                                labelStyle: TextStyle(
+                                                    fontSize: 13,
+                                                    color: Colors.grey),
+                                                prefixIcon: Icon(Icons.link)),
+                                          ),
+                                          const SizedBox(height: 16.0),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              ElevatedButton(
+                                                // adjust width height elevated button
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      Colors.green.shade700,
+                                                  foregroundColor: Colors.white,
+                                                  minimumSize:
+                                                      const Size(100, 50),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            32.0),
+                                                  ),
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: const Text('Cancel'),
+                                              ),
+                                              const SizedBox(width: 20.0),
+                                              ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      Colors.green.shade700,
+                                                  foregroundColor: Colors.white,
+                                                  minimumSize:
+                                                      const Size(100, 50),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            32.0),
+                                                  ),
+                                                ),
+                                                onPressed: () async {
+                                                  // if (fullnameController.text.isEmpty) {
+                                                  //   showError('Please enter fullname');
+                                                  // } else if (yearController.text.isEmpty) {
+                                                  //   showError('Please enter year');
+                                                  // } else if (blockController.text.isEmpty) {
+                                                  //   showError('Please enter block');
+                                                  // } else {
+                                                  //   var result = await DatabaseHelper.insertStudent(
+                                                  //       fullnameController.text,
+                                                  //       yearController.text,
+                                                  //       blockController.text);
+                                                  //   if (result > 0) {
+                                                  //     //Success Message
+                                                  //     successMessage('Student Added - ADD MODAL');
+                                                  //     resetControllers();
+                                                  //     setState(() {
+                                                  //       loadAllStudents();
+                                                  //     });
+                                                  //     Navigator.of(context).pop();
+                                                  //   } else {
+                                                  //     //Error Message
+                                                  //     showError('Error Adding Student - ADD MODAL');
+                                                  //   }
+                                                  // }
+                                                },
+                                                child: const Text('Update'),
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            });
                       },
                     ),
                     IconButton(
