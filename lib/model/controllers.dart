@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ControllerDAO {
-  static final fullname = TextEditingController();
-  static final purpose = TextEditingController();
-  static final contact = TextEditingController();
-  static final timeIn = TextEditingController();
-  static final timeOut = TextEditingController();
+  static var fullname = TextEditingController();
+  static var purpose = TextEditingController();
+  static var contact = TextEditingController();
+  static var timeIn = TextEditingController();
+  static var timeOut = TextEditingController();
 }

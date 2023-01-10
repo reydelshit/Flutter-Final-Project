@@ -19,6 +19,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  printing: ^5.9.3
   sqflite:
 
 dev_dependencies:

@@ -12,13 +12,13 @@ class LogBook extends StatefulWidget {
   State<LogBook> createState() => _LogBookState();
 }
 
-class ControllerDAO {
-  static final fullname = TextEditingController();
-  static final purpose = TextEditingController();
-  static final contact = TextEditingController();
-  static final timeIn = TextEditingController();
-  static final timeOut = TextEditingController();
-}
+// class ControllerDAO {
+//   static final fullname = TextEditingController();
+//   static final purpose = TextEditingController();
+//   static final contact = TextEditingController();
+//   static final timeIn = TextEditingController();
+//   static final timeOut = TextEditingController();
+// }
 
 class _LogBookState extends State<LogBook> {
   // final fullname = TextEditingController();
