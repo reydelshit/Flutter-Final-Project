@@ -349,16 +349,17 @@ class _ViewLogBookState extends State<ViewLogBook> {
         });
   }
 
-  void updateTimeOut() async {
-    await DatabaseHelper.updateLogBook(
-        logBookID,
-        logs[logBookID]['fullName'],
-        logs[logBookID]['purpose'],
-        logs[logBookID]['contact'],
-        logs[logBookID]['timeIn'],
-        ControllerDAO.timeOut.text);
+  void updateTimeOut(
+      String fullname, String purpose, String contact, String timeIn) async {
+    await DatabaseHelper.updateLogBook(logBookID, fullname, purpose, contact,
+        timeIn, ControllerDAO.timeOut.text);
     retrieveLogs();
   }
+
+  // logs[logBookID]['fullName'],
+  // logs[logBookID]['purpose'],
+  // logs[logBookID]['contact'],
+  // logs[logBookID]['timeIn'],
 
   @override
   Widget build(BuildContext context) {
@@ -416,13 +417,11 @@ class _ViewLogBookState extends State<ViewLogBook> {
                               actions: <Widget>[
                                 CupertinoActionSheetAction(
                                   onPressed: () {
-                                    var time = DateTime.now();
-                                    setState(() {
-                                      _timeOut = TimeOfDay.fromDateTime(time);
-                                      ControllerDAO.timeOut.text =
-                                          _timeOut.format(context);
-                                    });
-                                    updateTimeOut();
+                                    updateTimeOut(
+                                        logs[index]['fullName'],
+                                        logs[index]['purpose'],
+                                        logs[index]['contact'],
+                                        logs[index]['timeIn']);
                                     Navigator.pop(context);
                                   },
                                   child: Container(
@@ -435,7 +434,6 @@ class _ViewLogBookState extends State<ViewLogBook> {
                                               TimeOfDay.fromDateTime(time);
                                           ControllerDAO.timeOut.text =
                                               _timeOut.format(context);
-                                          updateTimeOut();
                                         });
                                       },
                                     ),
