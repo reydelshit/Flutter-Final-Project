@@ -26,14 +26,14 @@ class DatabaseHelper {
 
   ///Insert Student function
   static Future<int> insertLogBook(String? fullName, String? purpose,
-      String? contact, String? timeIn, String? timeOut) async {
+      String? contact, String? timeIn) async {
     final db = await DatabaseHelper.createDatabase();
     final data = {
       'fullname': fullName,
       'purpose': purpose,
       'contact': contact,
       'timeIn': timeIn,
-      'timeOut': timeOut
+      // 'timeOut': timeOut
     };
     final res = db.insert('logbook', data,
         conflictAlgorithm: sql.ConflictAlgorithm.replace);
@@ -43,7 +43,7 @@ class DatabaseHelper {
   //Function to retrieve all Student data
   static Future<List<Map<String, dynamic>>>? retrieveLogBook() async {
     final db = await DatabaseHelper.createDatabase();
-    return await db.query('logbook', orderBy: 'timeIn');
+    return await db.query('logbook', orderBy: 'fullname');
   }
 
   //Function to update student data

@@ -1,11 +1,10 @@
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+// import '../model/printable_data.dart';
+import 'package:printing/printing.dart';
+
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-
 import 'package:finalproject/database/database_helper.dart';
 import 'package:finalproject/model/controllers.dart';
 
@@ -72,39 +71,76 @@ class _ViewLogBookState extends State<ViewLogBook> {
     });
   }
 
-  Future<void> generatePdf() async {
-    // Create a new PDF document.
-    final pdf = pw.Document();
+  Future<void> printDoc() async {
+    final image = await imageFromAssetBundle(
+      "assets/images/logo.png",
+    );
 
-    // Add a page to the document.
-    pdf.addPage(pw.Page(
-      build: (pw.Context context) {
-        return pw.Table.fromTextArray(
-            context: context, data: _createTableData());
-      },
-    ));
+    buildPrintableData(image) => pw.Padding(
+          padding: const pw.EdgeInsets.all(25.00),
+          child: pw.Column(children: [
+            pw.Text("E-logbook System",
+                style: pw.TextStyle(
+                    fontSize: 25.00, fontWeight: pw.FontWeight.bold)),
+            pw.SizedBox(height: 10.00),
+            pw.Divider(),
+            pw.Align(
+              alignment: pw.Alignment.topRight,
+              child: pw.Image(
+                image,
+                width: 250,
+                height: 250,
+              ),
+            ),
+            pw.ListView(children: [
+              for (var i = 0; i < logs.length; i++)
+                pw.Container(
+                  decoration: const pw.BoxDecoration(),
+                  child: pw.Padding(
+                    padding: const pw.EdgeInsets.all(8.0),
+                    child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text(
+                          logs[i]['fullName'],
+                          style: pw.TextStyle(
+                              fontWeight: pw.FontWeight.bold, fontSize: 18),
+                        ),
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.only(top: 8.0),
+                          child: pw.Text(
+                            "Purpose: " + logs[i]['purpose'],
+                            style: const pw.TextStyle(fontSize: 15),
+                          ),
+                        ),
+                        pw.Text(
+                          "Contact: " + logs[i]['contact'],
+                          style: const pw.TextStyle(fontSize: 15),
+                        ),
+                        pw.Text(
+                          "Time In: " + logs[i]['timeIn'],
+                          style: const pw.TextStyle(fontSize: 15),
+                        ),
+                        pw.Text(
+                          "Time Out: " + logs[i]['timeOut'],
+                          style: const pw.TextStyle(fontSize: 15),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+            ])
+          ]),
+        );
 
-    // Save the PDF file.
-    final file = File('logs.pdf');
-    final bytes = await pdf.save();
-    await file.writeAsBytes(bytes);
-  }
-
-  List<List<String>> _createTableData() {
-    List<List<String>> data = [
-      ['Name', 'Purpose', 'Contact', 'Time In', 'Time Out']
-    ];
-
-    for (var i = 0; i < logs.length; i++) {
-      data.add([
-        logs[i]['fullName'],
-        logs[i]['purpose'],
-        logs[i]['contact'],
-        logs[i]['timeIn'],
-        logs[i]['timeOut']
-      ]);
-    }
-    return data;
+    final doc = pw.Document();
+    doc.addPage(pw.Page(
+        pageFormat: PdfPageFormat.a4,
+        build: (pw.Context context) {
+          return buildPrintableData(image);
+        }));
+    await Printing.layoutPdf(
+        onLayout: (PdfPageFormat format) async => doc.save());
   }
 
   Future<void> updateLog(int id, String fullName, String purpose,
@@ -194,7 +230,7 @@ class _ViewLogBookState extends State<ViewLogBook> {
                           ElevatedButton(
                             // adjust width height elevated button
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green.shade700,
+                              backgroundColor: const Color(0xffcd9d63),
                               foregroundColor: Colors.white,
                               minimumSize: const Size(100, 50),
                               shape: RoundedRectangleBorder(
@@ -209,7 +245,7 @@ class _ViewLogBookState extends State<ViewLogBook> {
                           const SizedBox(width: 20.0),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green.shade700,
+                              backgroundColor: const Color(0xffcd9d63),
                               foregroundColor: Colors.white,
                               minimumSize: const Size(100, 50),
                               shape: RoundedRectangleBorder(
@@ -223,10 +259,8 @@ class _ViewLogBookState extends State<ViewLogBook> {
                                 showError('Purpose is Empty');
                               } else if (ControllerDAO.contact.text.isEmpty) {
                                 showError('Contact is Empty');
-                              } else if (ControllerDAO.contact.text.isEmpty) {
-                                showError('Time In is Empty');
                               } else if (ControllerDAO.timeIn.text.isEmpty) {
-                                showError('Block is Empty');
+                                showError('Time In is Empty');
                               } else {
                                 var result = await DatabaseHelper.updateLogBook(
                                     logBookID,
@@ -317,7 +351,12 @@ class _ViewLogBookState extends State<ViewLogBook> {
 
   void updateTimeOut() async {
     await DatabaseHelper.updateLogBook(
-        logBookID, null, null, null, null, ControllerDAO.timeOut.text);
+        logBookID,
+        logs[logBookID]['fullName'],
+        logs[logBookID]['purpose'],
+        logs[logBookID]['contact'],
+        logs[logBookID]['timeIn'],
+        ControllerDAO.timeOut.text);
     retrieveLogs();
   }
 
@@ -326,10 +365,10 @@ class _ViewLogBookState extends State<ViewLogBook> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          generatePdf();
+          printDoc();
         },
-        backgroundColor: Colors.green.shade700,
-        child: const Icon(Icons.add),
+        backgroundColor: const Color(0xffcd9d63),
+        child: const Icon(Icons.print),
       ),
       appBar: AppBar(
         title: const Text('eLogbook'),
@@ -356,7 +395,10 @@ class _ViewLogBookState extends State<ViewLogBook> {
                     Text("Purpose: " + logs[index]['purpose']),
                     Text("Contact: " + logs[index]['contact']),
                     Text("Time In: " + logs[index]['timeIn']),
-                    Text("Time Out: " + logs[index]['timeOut']),
+                    Text("Time Out: " +
+                        (logs[index]['timeOut'] != null
+                            ? logs[index]['timeOut']
+                            : 'N/A'))
                   ],
                 ),
                 trailing: Wrap(
@@ -393,6 +435,7 @@ class _ViewLogBookState extends State<ViewLogBook> {
                                               TimeOfDay.fromDateTime(time);
                                           ControllerDAO.timeOut.text =
                                               _timeOut.format(context);
+                                          updateTimeOut();
                                         });
                                       },
                                     ),

@@ -12,29 +12,8 @@ class LogBook extends StatefulWidget {
   State<LogBook> createState() => _LogBookState();
 }
 
-// class ControllerDAO {
-//   static final fullname = TextEditingController();
-//   static final purpose = TextEditingController();
-//   static final contact = TextEditingController();
-//   static final timeIn = TextEditingController();
-//   static final timeOut = TextEditingController();
-// }
-
 class _LogBookState extends State<LogBook> {
-  // final fullname = TextEditingController();
-  // final purpose = TextEditingController();
-  // final contact = TextEditingController();
-
-  // final timeOut = TextEditingController();
-  // final timeIn = TextEditingController();
-
-  // final ControllerDAO controllerDAO = ControllerDAO();
-
   TimeOfDay _timeIn = TimeOfDay.now();
-
-//  ControllerDAO(fullName, purpose, contact, timeIn, timeOut);
-  // TimeOfDay _timeOut = TimeOfDay.now();
-  // TextEditingController timeOut = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -54,18 +33,21 @@ class _LogBookState extends State<LogBook> {
           action: SnackBarAction(label: 'OK', onPressed: () {})));
     }
 
-    void _saveLogBook() async {
-      // Create an instance of the DatabaseHelper class
-      // final dbHelper = DatabaseHelper();
+    // void resetTextControllers() {
+    //   ControllerDAO.fullname.text = '';
+    //   ControllerDAO.purpose.text = '';
+    //   ControllerDAO.contact.text = '';
+    //   ControllerDAO.timeIn.text = '';
+    //   // ControllerDAO.timeOut.text = '';
+    // }
 
-      // Insert a row into the logbook table
+    void _saveLogBook() async {
       final id = await DatabaseHelper.insertLogBook(
         ControllerDAO.fullname.text,
         ControllerDAO.purpose.text,
-        // int.parse(contact.text),
         ControllerDAO.contact.text,
         ControllerDAO.timeIn.text,
-        ControllerDAO.timeOut.text,
+        // ControllerDAO.timeOut.text,
       );
 
       // Display a success message
@@ -186,6 +168,7 @@ class _LogBookState extends State<LogBook> {
                                 showError('Time In is Empty');
                               } else {
                                 _saveLogBook();
+                                // resetTextControllers();
                                 Navigator.pushNamed(
                                     context, AppConstants.viewLogPageRoute);
                               }

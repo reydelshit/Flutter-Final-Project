@@ -1,3 +1,4 @@
+import 'package:finalproject/model/controllers.dart';
 import 'package:finalproject/pages/main_page.dart';
 import 'package:flutter/material.dart';
 // import 'package:finalproject/pages/home_page.dart';
@@ -31,6 +32,9 @@ class MyApp extends StatelessWidget {
 class LoginPage extends StatelessWidget {
   var usernameController = TextEditingController();
   var passwordController = TextEditingController();
+
+  var userName = "admin";
+  var passWord = "admin123";
 
   @override
   Widget build(BuildContext context) {
@@ -108,6 +112,7 @@ class LoginPage extends StatelessWidget {
               ),
               TextField(
                 controller: passwordController,
+                obscureText: true,
                 style: const TextStyle(color: Color(0xffcd9d63)),
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
@@ -140,11 +145,15 @@ class LoginPage extends StatelessWidget {
                               showError('Username is required!');
                             } else if (passwordController.text == '') {
                               showError('Password is required!');
-                            } else {
+                            } else if (passwordController.text == passWord &&
+                                usernameController.text == userName) {
                               successMessage('Login Success');
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (BuildContext context) =>
                                       MainPage()));
+                            } else {
+                              showError(
+                                  'Please enter correct username and password');
                             }
                           }))),
             ])));
